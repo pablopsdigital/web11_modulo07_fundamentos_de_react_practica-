@@ -1,14 +1,41 @@
+/*================================== Reset Browsers ==================================*/
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
-body {
+* {
   font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+body {
+  min-height: 100vh;
   margin: 0;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.container {
+  max-width: 100rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
