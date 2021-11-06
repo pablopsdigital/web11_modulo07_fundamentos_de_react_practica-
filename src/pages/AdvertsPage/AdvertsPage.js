@@ -27,10 +27,10 @@ function AdvertsPage({ ...props }) {
       <section className="container">
         <h2 className="card-list-title">The latest publications</h2>
         {advertisements.length ? (
-          /* <div className="card-list-wrapper">
-                <div>Loadin</div>
-                <div>Alert</div>
-              </div> */
+          // <div className="card-list-wrapper">
+          //   <SpinnerLoading/>
+          //   <div>Alert</div>
+          // </div>
           <ul className="card-list-auto-grid">
             {advertisements.map((advertisement) => (
               <AdvertisementCard key={advertisement.id} advertisement={advertisement} />
