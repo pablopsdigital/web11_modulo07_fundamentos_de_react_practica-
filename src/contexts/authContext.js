@@ -1,15 +1,8 @@
-import { createContext, useState } from "react";
+import React from 'react';
 
-//Create context React
-export const AuthContext = createContext();
+const AuthContext = React.createContext();
 
-//Wrap application with provider with AuthState
-export default function AuthContextProvider({ children }) {
-  const [isAuthenticatedState, setIsAuthenticated] = useState(false);
+export const AuthContextProvider = AuthContext.Provider;
+export const AuthContextConsummer = AuthContext.Consumer;
 
-  return (
-    <AuthContext.Provider value={isAuthenticatedState}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+export default AuthContext;

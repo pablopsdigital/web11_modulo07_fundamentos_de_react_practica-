@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import Button from "../../components/Button/Button";
-import { login } from "./LoginPageService";
-import "./LoginPage.css";
+import React, { useState, useContext } from 'react';
+import Button from '../../components/Button/Button';
+import { login } from './LoginPageService';
+import './LoginPage.css';
+import Alert from '../../components/Alert/Alert';
+import AuthContext from '../../contexts/AuthContext';
 
 //Receives a props which is the function to change the login status in the app component.
-function LoginPage({ onLogin, ...props }) {
+function LoginPage({ history, location, ...props }) {
+  const { handleLogin } = useContext(AuthContext);
+
   //State for inputs values
   const [inputsValuesState, setInputsValue] = useState({
-    email: "",
-    password: "",
-    rememberme: false,
+    email: '',
+    password: '',
+    rememberme: false
   });
 
   //State for error control
@@ -24,42 +28,34 @@ function LoginPage({ onLogin, ...props }) {
   const handleChange = (event) => {
     //Evaluate input type
     const input = event.target;
-    const value = input.type === "checkbox" ? input.checked : input.value;
+    const value = input.type === 'checkbox' ? input.checked : input.value;
     const name = input.name;
 
     //From the previous state, only the affected values are overwritten.
     //Generate a dynamic key for the name of the value to be changed.
     setInputsValue((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    //State loading
-    setIsLoading(true);
 
-    //State error null
-    setError();
-
-    //Reset inputs
-    //setInputsValue({ email: "", password: "" });
+    setIsLoading(true); //State loading
+    setError(); //State error null
 
     //Init request API
     try {
-      //Send email and pasword to header in axios client
-      //Return a promise
+      //Send email and pasword to header in axios client Return a promise
       await login(inputsValuesState);
-      setIsLoading(false);
-
-      //Login app state funcions send in props
-      onLogin();
+      setIsLoading(false); //Login app state funcions send in props
+      handleLogin();
+      const { from } = location.state || { from: { pathname: '/' } }; //Create url redirect with history
+      history.replace(from); //History router redirect override history navigator
     } catch (error) {
-      //State Loading
-      setIsLoading(false);
-      //Change the null error status to the message
-      setError(error);
+      setIsLoading(false); //State Loading
+      setError(error); //Change the null error status to the message
     }
   };
 
@@ -96,9 +92,7 @@ function LoginPage({ onLogin, ...props }) {
         <Button
           type="submit"
           //Render condicional disabled
-          disabled={
-            isLoading || !inputsValuesState.email || !inputsValuesState.password
-          }
+          disabled={isLoading || !inputsValuesState.email || !inputsValuesState.password}
         >
           Iniciar sesión
         </Button>
@@ -108,12 +102,18 @@ function LoginPage({ onLogin, ...props }) {
       {isLoading && <div>cargando</div>}
       {/*If the error is caught then they are shown a message whit stateError */}
       {error && (
-        <div onClick={resetError} className="loginPage-error">
+        <Alert onClick={resetError} className="loginPage-error">
           {error.message}
-        </div>
+        </Alert>
       )}
     </div>
   );
 }
+
+// const ConnectedLoginPage = (props) => (
+//   <AuthContextConsummer>
+//     {(auth) => <LoginPage onLogin={auth.handleLogin} {...props} />}
+//   </AuthContextConsummer>
+// );
 
 export default LoginPage;

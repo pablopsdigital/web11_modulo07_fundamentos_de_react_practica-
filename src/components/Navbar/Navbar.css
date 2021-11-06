@@ -1,10 +1,14 @@
 /*================================== Menu ==================================*/
 .navigation {
-  align-items: center;
-  background-color: white;
+  background-color: beige;
   width: 100%;
   padding: 5px 16px;
   border-bottom: 1px solid rgba(236, 239, 241, 0.5);
+}
+
+.navigation-list .link-active {
+  font-weight: 700;
+  color: red;
 }
 
 .navigation ul {
@@ -27,33 +31,12 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  align-items: center;
-  align-content: center;
 }
 
-.navigation-list .brand .brand-img {
+.brand-img {
   width: 200px;
   text-align: left;
   margin-right: 20px;
-}
-
-.navigation-list .search-container input {
-  height: 42px;
-  width: 100%;
-  border-radius: 50px;
-  background-color: #eceff1;
-  border: none;
-  font-size: 0.9em;
-  color: #b3c5ce;
-  padding: 0 32px 0 44px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  outline: none;
-}
-
-.navigation-list .search-container button {
-  display: none;
 }
 
 .navigation-list .navigation-options-container {
@@ -82,7 +65,6 @@
 
 .navigation .navigation-list {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 

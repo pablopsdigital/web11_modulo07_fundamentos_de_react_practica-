@@ -1,11 +1,12 @@
-import "./AdvertisementCard.css";
+import { Link } from 'react-router-dom';
+import './AdvertisementCard.css';
 
 function AdvertisementCard(props) {
   const advertisement = props.advertisement;
 
   return (
     <li className="card">
-      <a href="/detail.html?id={advertisement.id}" className="card-link">
+      <Link to="adverts/5" className="card-link">
         <img src={advertisement.photo} alt={advertisement.photo} />
 
         <div className="card-content">
@@ -16,7 +17,7 @@ function AdvertisementCard(props) {
           <h2 className="card-title">{advertisement.name}</h2>
 
           <div className="info-details">
-            {advertisement.sale === "sell" ? (
+            {advertisement.sale === 'sell' ? (
               <p className="advertisement-type background-sale">Sale</p>
             ) : (
               <p className="advertisement-type background-purchase">Purchase</p>
@@ -31,7 +32,7 @@ function AdvertisementCard(props) {
             ))}
           </div>
         </div>
-      </a>
+      </Link>
     </li>
   );
 }

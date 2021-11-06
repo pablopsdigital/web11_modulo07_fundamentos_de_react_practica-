@@ -1,0 +1,11 @@
+.noresultsfountd__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px;
+}
+
+.emoji {
+  font-size: 150px;
+}

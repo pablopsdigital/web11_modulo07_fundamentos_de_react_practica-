@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 const ApiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
 //Trasform response only data, no headers response
@@ -17,19 +17,19 @@ ApiClient.interceptors.response.use(
     return Promise.reject({
       message: error.response.statusText,
       ...error.response,
-      ...error.response.data,
+      ...error.response.data
     });
   }
 );
 
 //Function create auttentication header with token in localStorage
 export const setAuthorizationHeader = (token) => {
-  ApiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  ApiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
 //Function delete autenticatios headers
 export const removeAuthorizationHeader = () => {
-  delete ApiClient.defaults.headers.common["Authorization"];
+  delete ApiClient.defaults.headers.common['Authorization'];
 };
 
 export default ApiClient;
