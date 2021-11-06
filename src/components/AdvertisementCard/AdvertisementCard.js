@@ -1,20 +1,19 @@
 import { Link } from 'react-router-dom';
 import './AdvertisementCard.css';
 import PropTypes from 'prop-types';
+import Image from '../Image/Image';
 
 //Protypes
 AdvertisementCard.propTypes = {
   advertisement: PropTypes.object.isRequired
 };
 
-function AdvertisementCard(props) {
-  const advertisement = props.advertisement;
-
+function AdvertisementCard({ advertisement, ...props }) {
   return (
     <li className="card">
-      <Link to="adverts/5" className="card-link">
-        <img src={advertisement.photo} alt={advertisement.photo} />
-
+      {console.log(advertisement.id)}
+      <Link to={`/adverts/${advertisement.id}`} className="card-link">
+        <Image photo={advertisement.photo} />
         <div className="card-content">
           <p className="card-price">
             {advertisement.price}
@@ -23,12 +22,12 @@ function AdvertisementCard(props) {
           <h2 className="card-title">{advertisement.name}</h2>
 
           <div className="info-details">
-            {advertisement.sale === 'sell' ? (
+            {advertisement.sale ? (
               <p className="advertisement-type background-sale">Sale</p>
             ) : (
               <p className="advertisement-type background-purchase">Purchase</p>
             )}
-            <p className="date">Publication date: {advertisement.updatedAt}</p>
+            <p className="date">Publication date: {advertisement.createdAt}</p>
           </div>
           <div className="tags-details">
             {advertisement.tags.map((tag, index) => (
