@@ -4,8 +4,14 @@ import './AdvertsPage.css';
 import { useState, useEffect } from 'react';
 import { getAdvertisements } from './AdvertsPageService';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
+import PropTypes from 'prop-types';
 
-function AdvertsPage({ title, ...props }) {
+//Protypes
+AdvertsPage.propTypes = {
+  history: PropTypes.object.isRequired
+};
+
+function AdvertsPage({ ...props }) {
   //States
   //=======================================================================
   const [advertisements, setAdvertisements] = useState([]);
@@ -19,7 +25,7 @@ function AdvertsPage({ title, ...props }) {
   return (
     <Layout {...props}>
       <section className="container">
-        <h2 className="card-list-title">{title}</h2>
+        <h2 className="card-list-title">The latest publications</h2>
         {advertisements.length ? (
           /* <div className="card-list-wrapper">
                 <div>Loadin</div>

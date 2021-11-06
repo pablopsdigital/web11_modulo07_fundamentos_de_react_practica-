@@ -1,6 +1,20 @@
 import './Alert.css';
+import PropTypes from 'prop-types';
 
-function Alert(props) {
+//Protypes
+Alert.propTypes = {
+  title: PropTypes.string,
+  message: PropTypes.string,
+  color: PropTypes.string
+};
+
+Alert.defaultProps = {
+  title: 'Alert',
+  message: 'An error has occurred',
+  color: 'gray'
+};
+
+function Alert({ title, message, color, ...props }) {
   return (
     <div className="alert">
       <h1>alerta</h1>

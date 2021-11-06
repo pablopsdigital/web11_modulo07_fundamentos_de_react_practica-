@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom';
 import './AdvertisementCard.css';
+import PropTypes from 'prop-types';
+
+//Protypes
+AdvertisementCard.propTypes = {
+  advertisement: PropTypes.object.isRequired
+};
 
 function AdvertisementCard(props) {
   const advertisement = props.advertisement;

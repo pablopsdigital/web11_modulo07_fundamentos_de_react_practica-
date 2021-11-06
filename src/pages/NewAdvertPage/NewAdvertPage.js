@@ -1,8 +1,14 @@
 import Layout from '../../containers/Layout/Layout';
 import { useRef, useState, useEffect } from 'react';
 import Button from '../../components/Button/Button';
-
+import PropTypes from 'prop-types';
 import './NewAdvertPage.css';
+
+// //Protypes
+// NewAdvertPage.propTypes = {
+//   match: PropTypes.object.isRequired,
+//   match: PropTypes.title.isRequired
+// };
 
 function NewAdvertPage({ title, ...props }) {
   // const [image, setImage] = useState < File > ();

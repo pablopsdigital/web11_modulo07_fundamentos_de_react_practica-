@@ -4,6 +4,13 @@ import { login } from './LoginPageService';
 import './LoginPage.css';
 import Alert from '../../components/Alert/Alert';
 import AuthContext from '../../contexts/AuthContext';
+import PropTypes from 'prop-types';
+
+//Protypes
+LoginPage.propTypes = {
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
+};
 
 //Receives a props which is the function to change the login status in the app component.
 function LoginPage({ history, location, ...props }) {
@@ -109,11 +116,5 @@ function LoginPage({ history, location, ...props }) {
     </div>
   );
 }
-
-// const ConnectedLoginPage = (props) => (
-//   <AuthContextConsummer>
-//     {(auth) => <LoginPage onLogin={auth.handleLogin} {...props} />}
-//   </AuthContextConsummer>
-// );
 
 export default LoginPage;

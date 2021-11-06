@@ -1,5 +1,12 @@
 import Layout from '../../containers/Layout/Layout';
 import './AdvertPage.css';
+// import PropTypes from 'prop-types';
+
+// //Protypes
+// AdvertPage.propTypes = {
+//   match: PropTypes.object.isRequired,
+//   match: PropTypes.title.isRequired
+// };
 
 function AdvertPage({ match, title, ...props }) {
   const dataSample = {
