@@ -80,11 +80,6 @@ function NewAdvertPage({ ...props }) {
     reader.readAsDataURL(event.target.files[0]);
   };
 
-  // const [photoInputState, setPhoto] = useState(null);
-  // const handleInputPhoto = (event) => {
-  //   setPhoto(event.target.files[0]);
-  // };
-
   const [createIdAdvertResponse, setIdAdverResponse] = useState('');
 
   const createdAdvert = async (newAdvertFormData) => {
@@ -92,7 +87,7 @@ function NewAdvertPage({ ...props }) {
       const createdAdvertResponse = await createAdvertisement(newAdvertFormData);
       setIdAdverResponse(createdAdvertResponse.id);
     } catch (error) {
-      console.log('Error desde: ', error);
+      setError(error);
     }
   };
 
@@ -114,11 +109,6 @@ function NewAdvertPage({ ...props }) {
     newAdvertFormData.set('sale', saleInputState);
     newAdvertFormData.set('price', priceInputState);
     newAdvertFormData.set('tags', finalTags.tags);
-
-    // let data = photoInputState.imagePhoto;
-    // let buff = new Buffer(data);
-    // let base64data = buff.toString('base64');
-    // newAdvertFormData.set('photo', base64data);
 
     newAdvertFormData.set('photo', photoInputState);
     createdAdvert(newAdvertFormData);
@@ -190,8 +180,6 @@ function NewAdvertPage({ ...props }) {
           </ul>
         </div>
         <div>
-          {/* <input type="file" onChange={handleInputPhoto} /> */}
-
           <DragAndDropInputFile
             onChange={handleInputPhoto}
             imagePhoto={photoRenderState}

@@ -16,9 +16,9 @@ Alert.defaultProps = {
 
 function Alert({ ...props }) {
   return (
-    <div className="alert">
-      <h1>alerta</h1>
+    <div onClick={props.onClick} className="alert">
       <p>{props.children}</p>
+      <div className="close">X</div>
     </div>
   );
 }

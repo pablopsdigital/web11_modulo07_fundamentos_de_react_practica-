@@ -21,7 +21,7 @@ function LoginPage({ history, location, ...props }) {
   const [inputsValuesState, setInputsValue] = useState({
     email: '',
     password: '',
-    rememberme: false
+    rememberme: null
   });
 
   //State for error control

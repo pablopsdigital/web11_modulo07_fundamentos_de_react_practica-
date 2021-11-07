@@ -21,7 +21,7 @@ const StorageManager = {
   //Clear all
   clear() {
     localStorage.clear();
-  },
+  }
 };
 
 export default StorageManager;

@@ -1,3 +1,24 @@
 .alert {
+  background-color: rgba(255, 0, 0, 0.192);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 25px 0px;
+}
+
+.alert .close {
+  cursor: pointer;
   background-color: red;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 50px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

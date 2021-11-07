@@ -10,6 +10,7 @@ import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import PropTypes from 'prop-types';
 import Alert from '../../components/Alert/Alert';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
+const { formatDistanceToNow } = require('date-fns');
 
 // //Protypes
 AdvertPage.propTypes = {
@@ -57,7 +58,12 @@ function AdvertPage({ match, ...props }) {
               <div className="description">
                 <p className="type">{advertisement.sale}</p>
                 <h1>{advertisement.name}</h1>
-                <p className="date-published">Published: {advertisement.createAt}</p>
+                <p className="date-published">
+                  Published:
+                  <time dateTime={advertisement.createdAt}>
+                    {formatDistanceToNow(new Date(advertisement.createdAt))}
+                  </time>
+                </p>
               </div>
 
               <div className="tags-container">

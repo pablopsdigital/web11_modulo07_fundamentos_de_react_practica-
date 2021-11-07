@@ -35,10 +35,8 @@ function Navbar({ ...props }) {
 
         <li className="navigation-buttons">
           {userIsLoggedState ? (
-            <Link to="/login">
-              <Button className="close-session-button" onClick={handleLogout}>
-                Log out
-              </Button>
+            <Link to="/login" onClick={handleLogout}>
+              <Button className="close-session-button">Log out</Button>
             </Link>
           ) : (
             <Link to="/login">

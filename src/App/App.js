@@ -20,6 +20,7 @@ function App({ hasAccessToken, ...props }) {
     setIsLogged(true);
   };
   const handleLogout = () => {
+    alert('hol');
     logout().then(() => setIsLogged(false));
   };
 

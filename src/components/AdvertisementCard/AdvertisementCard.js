@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import './AdvertisementCard.css';
 import PropTypes from 'prop-types';
 import Image from '../Image/Image';
+const { formatDistanceToNow } = require('date-fns');
 
 //Protypes
 AdvertisementCard.propTypes = {
@@ -26,7 +27,12 @@ function AdvertisementCard({ advertisement, ...props }) {
             ) : (
               <p className="advertisement-type background-purchase">Purchase</p>
             )}
-            <p className="date">Publication date: {advertisement.createdAt}</p>
+            <p className="date">
+              Publication date:{' '}
+              <time dateTime={advertisement.createdAt}>
+                {formatDistanceToNow(new Date(advertisement.createdAt))}
+              </time>
+            </p>
           </div>
           <div className="tags-details">
             {advertisement.tags.map((tag, index) => (
