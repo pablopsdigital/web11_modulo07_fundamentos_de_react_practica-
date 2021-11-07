@@ -22,10 +22,10 @@ ApiClient.interceptors.response.use(
   }
 );
 
-ApiClient.interceptors.request.use((config) => {
-  config.headers['Content-Type'] = 'multipart/form-data;';
-  return config;
-});
+// ApiClient.interceptors.request.use((config) => {
+//   config.headers['Content-Type'] = 'multipart/form-data;';
+//   return config;
+// });
 
 //Function create auttentication header with token in localStorage
 export const setAuthorizationHeader = (token) => {

@@ -68,20 +68,29 @@ function NewAdvertPage({ ...props }) {
 
   /*Photo*/
   const [photoInputState, setPhoto] = useState({ imagePhoto });
+  const [photoRenderState, setRenderPhoto] = useState({ imagePhoto });
   const handleInputPhoto = (event) => {
+    setPhoto(event.target.files[0]);
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setPhoto({ imagePhoto: reader.result });
+        setRenderPhoto({ imagePhoto: reader.result });
       }
     };
     reader.readAsDataURL(event.target.files[0]);
   };
 
+  // const [photoInputState, setPhoto] = useState(null);
+  // const handleInputPhoto = (event) => {
+  //   setPhoto(event.target.files[0]);
+  // };
+
+  const [createIdAdvertResponse, setIdAdverResponse] = useState('');
+
   const createdAdvert = async (newAdvertFormData) => {
     try {
-      const response = await createAdvertisement(newAdvertFormData);
-      console.log(response);
+      const createdAdvertResponse = await createAdvertisement(newAdvertFormData);
+      setIdAdverResponse(createdAdvertResponse.id);
     } catch (error) {
       console.log('Error desde: ', error);
     }
@@ -90,6 +99,8 @@ function NewAdvertPage({ ...props }) {
   /*Send form*/
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    resetError();
+    setIsLoading(true);
 
     let finalTags = { tags: [] };
     tagsInputState.tags.forEach((tag) => {
@@ -109,13 +120,16 @@ function NewAdvertPage({ ...props }) {
     // let base64data = buff.toString('base64');
     // newAdvertFormData.set('photo', base64data);
 
-    newAdvertFormData.set('photo', new Blob([photoInputState]));
+    newAdvertFormData.set('photo', photoInputState);
     createdAdvert(newAdvertFormData);
+
+    setIsLoading(false);
   };
-  // //Redirect;
-  // if (createdAdvertId) {
-  //   return <Redirect to={`/adverts/${createdAdvertId}`} />;
-  // }
+
+  //Redirect;
+  if (createIdAdvertResponse) {
+    return <Redirect to={`/adverts/${createIdAdvertResponse}`} />;
+  }
 
   return (
     <Layout {...props}>
@@ -176,9 +190,11 @@ function NewAdvertPage({ ...props }) {
           </ul>
         </div>
         <div>
+          {/* <input type="file" onChange={handleInputPhoto} /> */}
+
           <DragAndDropInputFile
             onChange={handleInputPhoto}
-            imagePhoto={photoInputState}
+            imagePhoto={photoRenderState}
             accept={'image/*'}
             name={'image-upload'}
             {...props}
@@ -190,6 +206,12 @@ function NewAdvertPage({ ...props }) {
           </Button>
         </div>
       </form>
+      {isLoading && <SpinnerLoading />}
+      {error && (
+        <Alert onClick={resetError} className="loginPage-error">
+          {error.message}
+        </Alert>
+      )}
     </Layout>
   );
 }
