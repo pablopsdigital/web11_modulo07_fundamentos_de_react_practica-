@@ -1,31 +1,90 @@
 import Layout from '../../containers/Layout/Layout';
 import './AdvertPage.css';
-// import PropTypes from 'prop-types';
+import { getAdvertisementId } from './AdvertService';
+import { useState, useLayoutEffect, Fragment } from 'react';
+import { ReactComponent as ArrowIcon } from '../../images/svg/arrow.svg';
+import Button from '../../components/Button/Button';
+import Image from '../../components/Image/Image';
+import { Link } from 'react-router-dom';
+import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
+import PropTypes from 'prop-types';
+import Alert from '../../components/Alert/Alert';
+import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 
 // //Protypes
-// AdvertPage.propTypes = {
-//   match: PropTypes.object.isRequired,
-//   match: PropTypes.title.isRequired
-// };
+AdvertPage.propTypes = {
+  match: PropTypes.object.isRequired
+};
 
-function AdvertPage({ match, title, ...props }) {
-  const dataSample = {
-    advertisement: {
-      id: 'b6af331e-69a8-4502-bdbe-5e2d3d547ab8',
-      createdAt: '2021-11-03T13:57:12.000Z',
-      name: 'test',
-      sale: true,
-      price: 20,
-      tags: ['mobile', 'lifestyle'],
-      photo: null
-    }
+function AdvertPage({ match, ...props }) {
+  const [advertisement, setAdvertisement] = useState();
+  const advertisementId = match.params.advertId;
+
+  //State loading
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const resetError = () => {
+    setError(null);
   };
+
+  useLayoutEffect(() => {
+    resetError();
+    getAdvertisementId(advertisementId).then((advertisement) => setAdvertisement(advertisement));
+    console.log(advertisement);
+    setIsLoading(false);
+  }, []);
 
   return (
     <Layout {...props}>
-      <section className="container">
-        <h2 className="card-list-title">{title}</h2>
-        <h1>AdvertInfopage {match.params.advertId}</h1>
+      <section className="container advertisement-detail-container flex">
+        {advertisement ? (
+          <Fragment>
+            <div className="left-column">
+              <Image photo={advertisement.photo} />
+            </div>
+
+            <div className="right-column">
+              <div className="buttons-header">
+                <Link to={''}>
+                  <Button className="back-button">
+                    <ArrowIcon className="arrow-icon-svg" />
+                    Go back
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="description">
+                <p className="type">{advertisement.sale}</p>
+                <h1>{advertisement.name}</h1>
+                <p className="date-published">Published: {advertisement.createAt}</p>
+              </div>
+
+              <div className="tags-container">
+                {advertisement.tags.map((tag, index) => (
+                  <span key={index} href="url" className="tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="price">
+                <p>{advertisement.price} €</p>
+                <Link to={'#'} className="cart-btn">
+                  Add to cart
+                </Link>
+              </div>
+            </div>
+          </Fragment>
+        ) : (
+          <NoResultsFound />
+        )}
+        {isLoading && <SpinnerLoading />}
+        {error && (
+          <Alert onClick={resetError} className="loginPage-error">
+            {error.message}
+          </Alert>
+        )}
       </section>
     </Layout>
   );

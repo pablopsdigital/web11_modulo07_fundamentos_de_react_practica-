@@ -11,7 +11,6 @@ AdvertisementCard.propTypes = {
 function AdvertisementCard({ advertisement, ...props }) {
   return (
     <li className="card">
-      {console.log(advertisement.id)}
       <Link to={`/adverts/${advertisement.id}`} className="card-link">
         <Image photo={advertisement.photo} />
         <div className="card-content">

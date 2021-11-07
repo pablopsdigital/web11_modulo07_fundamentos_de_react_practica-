@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState } from 'react';
 import AdvertsPage from '../pages/AdvertsPage/AdvertsPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
-import { logout } from '../pages/LoginPage/LoginPageService';
+import { logout } from '../pages/LoginPage/LoginService';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import NewAdvertPage from '../pages/NewAdvertPage/NewAdvertPage';
 import AdvertPage from '../pages/AdvertPage/AdvertPage';

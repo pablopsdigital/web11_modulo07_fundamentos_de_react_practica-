@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import Button from '../../components/Button/Button';
-import { login } from './LoginPageService';
+import { login } from './LoginService';
 import './LoginPage.css';
 import Alert from '../../components/Alert/Alert';
 import AuthContext from '../../contexts/AuthContext';
 import PropTypes from 'prop-types';
+import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 
 //Protypes
 LoginPage.propTypes = {
@@ -106,7 +107,7 @@ function LoginPage({ history, location, ...props }) {
       </form>
 
       {/*If loading*/}
-      {isLoading && <div>cargando</div>}
+      {isLoading && <SpinnerLoading />}
       {/*If the error is caught then they are shown a message whit stateError */}
       {error && (
         <Alert onClick={resetError} className="loginPage-error">

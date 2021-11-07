@@ -23,7 +23,12 @@ function Navbar({ ...props }) {
         <li className="search-container">{/* <SearchBox placeholder="Search advert..." /> */}</li>
 
         <li>
-          <NavLink to="/adverts/new" activeClassName="link-active">
+          <NavLink exact to="/adverts" activeClassName="link-active">
+            Adverts
+          </NavLink>
+        </li>
+        <li>
+          <NavLink exact to="/adverts/new" activeClassName="link-active">
             New Advert
           </NavLink>
         </li>

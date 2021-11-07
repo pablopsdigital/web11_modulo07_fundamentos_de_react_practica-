@@ -14,7 +14,7 @@ Alert.defaultProps = {
   color: 'gray'
 };
 
-function Alert({ title, message, color, ...props }) {
+function Alert({ ...props }) {
   return (
     <div className="alert">
       <h1>alerta</h1>
