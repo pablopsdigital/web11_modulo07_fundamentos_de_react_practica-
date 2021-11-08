@@ -29,7 +29,7 @@ function AdvertsPage({ ...props }) {
 
   //States
   //=======================================================================
-  const [advertisements, setAdvertisements] = useState([]);
+  const [advertisementsState, setAdvertisements] = useState([]);
 
   //State loading
   const [isLoading, setIsLoading] = useState(true);
@@ -46,23 +46,58 @@ function AdvertsPage({ ...props }) {
   }, []);
 
   //Filters
-  const [filtersState, setFilters] = useState();
+  //======================================================================
+  const initialStateFilters = {
+    name: '',
+    sale: 'all',
+    price: 0,
+    tags: []
+  };
+
+  const [filtersState, setFilters] = useState(initialStateFilters);
+  const resetFilters = () => {
+    setFilters = null;
+  };
+
+  let advertisementsFilterList = advertisementsState;
+  const handleFilterResults = () => {};
 
   //Return
   //=======================================================================
   return (
-    <FiltersContextProvider>
+    <FiltersContextProvider value={{ filtersState, setFilters, resetFilters, handleFilterResults }}>
       <Layout {...props}>
         <section className="container">
           <Filters />
         </section>
         <section className="container">
           <h2 className="card-list-title">The latest publications</h2>
-          {isLoading || advertisements.length ? (
+          {isLoading || advertisementsState.length ? (
             <ul className="card-list-auto-grid">
-              {advertisements.map((advertisement) => (
-                <AdvertisementCard key={advertisement.id} advertisement={advertisement} />
-              ))}
+              {advertisementsState
+                .filter((advertisement) => {
+                  if (filtersState.name) {
+                    return advertisement.name.includes(filtersState.name);
+                  }
+                  if (filtersState.sale === 'buy') {
+                    return advertisement.sale === 'buy';
+                  }
+
+                  if (filtersState.sale === 'sale') {
+                    return advertisement.sale === 'sale';
+                  }
+
+                  if (filtersState.sale === 'all') {
+                    return advertisement;
+                  }
+
+                  if (JSON.stringify(filtersState.tags) === JSON.stringify(advertisement.tags)) {
+                    return advertisement;
+                  }
+                })
+                .map((advertisement) => (
+                  <AdvertisementCard key={advertisement.id} advertisement={advertisement} />
+                ))}
             </ul>
           ) : (
             <NoResultsFound />

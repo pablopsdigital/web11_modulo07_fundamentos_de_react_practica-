@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Button from '../../components/Button/Button';
 import './Filters.css';
 import CheckBoxInput from '../InputsForm/CheckBoxInput';
 import Slider, { SliderTooltip } from 'rc-slider';
+import FiltersContext from '../../contexts/FiltersContext';
 
 function Filters() {
   //States
@@ -10,21 +11,21 @@ function Filters() {
   const [nameInputState, setName] = useState('');
   const handleInputName = (event) => {
     setName(event.target.value);
-    console.log(nameInputState);
+    //console.log(nameInputState);
   };
 
   /*Sale*/
   const [saleInputState, setSale] = useState(null);
   const handleInputSale = (event) => {
     setSale(event.target.value);
-    console.log(saleInputState);
+    //console.log(saleInputState);
   };
 
   /*Price*/
   const [priceInputState, setPrice] = useState();
   const handleInputPrice = (event) => {
     setPrice(event.target.value);
-    console.log(priceInputState);
+    //console.log(priceInputState);
   };
 
   /*Tags*/
@@ -56,7 +57,7 @@ function Filters() {
       finalTags.tags.push(tag.value);
     }
   });
-  console.log(finalTags);
+  //console.log(finalTags);
 
   //Filters
   const [inputFiltersValues, setInputsFiltersValue] = useState();
@@ -69,9 +70,22 @@ function Filters() {
     tags: finalTags.tags
   };
 
+  const { filtersState } = useContext(FiltersContext);
+  const { setFilters } = useContext(FiltersContext);
+  const { handleFilterResults } = useContext(FiltersContext);
+
   /*Send form*/
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setFilters(filters);
+    //handleFilterResults();
+  };
+
+  const reset = () => {
+    setName('');
+    setSale(null);
+    setPrice();
+    setTags({ tags: inititalTags });
   };
 
   return (
@@ -151,7 +165,9 @@ function Filters() {
               <Button type="submit" value="filter">
                 Filter
               </Button>
-              <Button value="clearfilter">Clear</Button>
+              <Button onClick={reset} value="clearfilter">
+                Clear
+              </Button>
             </div>
           </form>
         </div>
