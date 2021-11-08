@@ -3,10 +3,10 @@ import Button from '../Button/Button';
 import { useContext } from 'react';
 import { ReactComponent as Brand } from '../../images/svg/brand.svg';
 import { Link, NavLink } from 'react-router-dom';
-// import SearchBox from '../../components/SearchBox/SearchBox';
 import AuthContext from '../../contexts/AuthContext';
+import { useState } from 'react';
 
-function Navbar({ ...props }) {
+function Navbar({ search, ...props }) {
   //Import authContext properties
   const { userIsLoggedState, handleLogout } = useContext(AuthContext);
 
@@ -19,9 +19,6 @@ function Navbar({ ...props }) {
             <Brand className="brand-img" alt="brand"></Brand>
           </Link>
         </li>
-
-        <li className="search-container">{/* <SearchBox placeholder="Search advert..." /> */}</li>
-
         <li>
           <NavLink exact to="/adverts" activeClassName="link-active">
             Adverts
@@ -32,7 +29,6 @@ function Navbar({ ...props }) {
             New Advert
           </NavLink>
         </li>
-
         <li className="navigation-buttons">
           {userIsLoggedState ? (
             <Link to="/login" onClick={handleLogout}>

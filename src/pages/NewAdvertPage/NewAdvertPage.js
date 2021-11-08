@@ -135,6 +135,7 @@ function NewAdvertPage({ ...props }) {
             placeholder="name"
             value={nameInputState}
             onChange={handleInputName}
+            required
           />
         </div>
         <div>
@@ -145,6 +146,7 @@ function NewAdvertPage({ ...props }) {
               placeholder="price"
               value={priceInputState}
               onChange={handleInputPrice}
+              required
             />
             €
           </label>
@@ -157,6 +159,7 @@ function NewAdvertPage({ ...props }) {
                 value="true"
                 checked={saleInputState === 'true'}
                 onChange={handleInputSale}
+                required
               />
               Sale
             </label>
@@ -167,6 +170,7 @@ function NewAdvertPage({ ...props }) {
                 value="false"
                 checked={saleInputState === 'false'}
                 onChange={handleInputSale}
+                required
               />
               Buy
             </label>
@@ -175,7 +179,9 @@ function NewAdvertPage({ ...props }) {
         <div>
           <ul>
             {tagsInputState.tags.map((tag) => {
-              return <CheckBoxInput key={tag.id} onChange={handleCheckChieldElement} {...tag} />;
+              return (
+                <CheckBoxInput key={tag.id} onChange={handleCheckChieldElement} {...tag} required />
+              );
             })}
           </ul>
         </div>
@@ -186,6 +192,7 @@ function NewAdvertPage({ ...props }) {
             accept={'image/*'}
             name={'image-upload'}
             {...props}
+            required
           />
         </div>
         <div>

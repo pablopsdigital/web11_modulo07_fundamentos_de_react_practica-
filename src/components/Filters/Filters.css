@@ -1,0 +1,34 @@
+.filters {
+  padding: 20px;
+  background-color: rgb(234, 236, 236);
+}
+
+.filters h3 {
+  font-weight: 700;
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filters-inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filters-inputs div {
+  margin: 20px;
+}
+
+.buttons-footer-filters {
+  text-align: right;
+}
+
+.filters label {
+  margin: 10px;
+}
