@@ -1,4 +1,4 @@
-const StorageManager = {
+const CustomLocalStorageManager = {
   //Read localStorage
   getItem(key) {
     const data = localStorage.getItem(key);
@@ -24,4 +24,4 @@ const StorageManager = {
   }
 };
 
-export default StorageManager;
+export default CustomLocalStorageManager;

@@ -1,17 +1,18 @@
 import Layout from '../../containers/Layout/Layout';
-import { useState, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../../components/Button/Button';
-import './NewAdvertPage.css';
-import CheckBoxInput from '../../components/InputsForm/CheckBoxInput';
-import DragAndDropInputFile from '../../components/InputsForm/DragAndDropInputFile/DragAndDropInputFile';
-import imagePhoto from '../../images/no-image.png';
+import './NewAdvertPage.scss';
+import InputFile from '../../components/InputFile/InputFile';
+import imageNoPhoto from '../../images/no-image.png';
 import { createAdvertisement } from './NewAdvertService';
 import { Redirect } from 'react-router-dom';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
+import { getAllTags } from '../../components/FiltersForm/FiltersService';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 function NewAdvertPage({ ...props }) {
-  //State loading
+  //Data
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,69 +20,73 @@ function NewAdvertPage({ ...props }) {
     setError(null);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     resetError();
     setIsLoading(false);
   }, []);
 
-  /*Name*/
-  const [nameInputState, setName] = useState('');
+  //Name
+  const [name, setName] = useState('');
   const handleInputName = (event) => {
     setName(event.target.value);
   };
 
-  /*Sale*/
-  const [saleInputState, setSale] = useState(null);
+  //Sale
+  const [type, setSale] = useState(null);
   const handleInputSale = (event) => {
     setSale(event.target.value);
-    console.log(saleInputState);
+    console.log(type);
   };
 
-  /*Price*/
-  const [priceInputState, setPrice] = useState(0);
+  //Price
+  const [price, setPrice] = useState(0);
   const handleInputPrice = (event) => {
     setPrice(event.target.value);
   };
 
-  /*Tags*/
-  const inititalTags = [
-    { id: 1, value: 'lifestyle', isChecked: false },
-    { id: 2, value: 'mobile', isChecked: false },
-    { id: 3, value: 'motor', isChecked: false },
-    { id: 4, value: 'work', isChecked: false }
-  ];
+  //Tags
+  const [selectTags, setSelectTags] = useState([]);
+  const [tags, setTags] = useState([]);
 
-  const [tagsInputState, setTags] = useState({ tags: inititalTags });
+  useEffect(() => {
+    setIsLoading(true);
+    getAllTags().then((tags) => setTags(tags));
+    setIsLoading(false);
+  }, []);
 
-  const handleCheckChieldElement = (event) => {
-    let tagsList = tagsInputState.tags;
-    tagsList.forEach((tag) => {
-      if (tag.value === event.target.value) {
-        tag.isChecked = event.target.checked;
-      }
-    });
-    setTags((prevState) => ({
-      ...prevState,
-      tags: tagsList
-    }));
+  const handleCheckTag = (event) => {
+    var listTags = [...selectTags];
+    if (event.target.checked) {
+      listTags = [...selectTags, event.target.value];
+    } else {
+      listTags.splice(selectTags.indexOf(event.target.value), 1);
+    }
+    setSelectTags(listTags);
   };
 
-  /*Photo*/
-  const [photoInputState, setPhoto] = useState({ imagePhoto });
-  const [photoRenderState, setRenderPhoto] = useState({ imagePhoto });
+  //Photo
+  const [photo, setPhoto] = useState();
+  const [photoRender, setRenderPhoto] = useState({ imageNoPhoto });
   const handleInputPhoto = (event) => {
-    setPhoto(event.target.files[0]);
     const reader = new FileReader();
+
+    if (event.target.files[0]) {
+      setPhoto(event.target.files[0]);
+    }
+
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setRenderPhoto({ imagePhoto: reader.result });
+        setRenderPhoto({ imageNoPhoto: reader.result });
       }
     };
-    reader.readAsDataURL(event.target.files[0]);
+
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
   };
 
+  //Create and save new advert
   const [createIdAdvertResponse, setIdAdverResponse] = useState('');
-
   const createdAdvert = async (newAdvertFormData) => {
     try {
       const createdAdvertResponse = await createAdvertisement(newAdvertFormData);
@@ -91,31 +96,28 @@ function NewAdvertPage({ ...props }) {
     }
   };
 
-  /*Send form*/
+  //Send form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     resetError();
     setIsLoading(true);
 
-    let finalTags = { tags: [] };
-    tagsInputState.tags.forEach((tag) => {
-      if (tag.isChecked) {
-        finalTags.tags.push(tag.value);
+    if (!selectTags.length) {
+      setError({ message: 'Select one tags' });
+    } else {
+      const newAdvertFormData = new FormData();
+      newAdvertFormData.set('name', name);
+      newAdvertFormData.set('sale', type);
+      newAdvertFormData.set('price', price);
+      newAdvertFormData.set('tags', selectTags);
+      if (photo) {
+        newAdvertFormData.set('photo', photo);
       }
-    });
 
-    const newAdvertFormData = new FormData();
-    newAdvertFormData.set('name', nameInputState);
-    newAdvertFormData.set('sale', saleInputState);
-    newAdvertFormData.set('price', priceInputState);
-    newAdvertFormData.set('tags', finalTags.tags);
-
-    newAdvertFormData.set('photo', photoInputState);
-    createdAdvert(newAdvertFormData);
-
+      createdAdvert(newAdvertFormData);
+    }
     setIsLoading(false);
   };
-
   //Redirect;
   if (createIdAdvertResponse) {
     return <Redirect to={`/adverts/${createIdAdvertResponse}`} />;
@@ -123,90 +125,112 @@ function NewAdvertPage({ ...props }) {
 
   return (
     <Layout {...props}>
-      <section className="container">
-        <h2>NewAdvertPage</h2>
-      </section>
+      <div id="new-advert-page">
+        <div className="container">
+          <div className="header">
+            <h2>NewAdvertPage</h2>
+          </div>
 
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          <input
-            type="text"
-            className=""
-            placeholder="name"
-            value={nameInputState}
-            onChange={handleInputName}
-            required
-          />
-        </div>
-        <div>
-          <label>
-            <input
-              type="number"
-              className=""
-              placeholder="price"
-              value={priceInputState}
-              onChange={handleInputPrice}
-              required
-            />
-            €
-          </label>
+          <div className="body">
+            <form onSubmit={handleFormSubmit}>
+              <div className="columns">
+                <div className="colum">
+                  <div className="input-container">
+                    <label>Name</label>
+                    <input
+                      type="text"
+                      className=""
+                      placeholder="name"
+                      value={name}
+                      onChange={handleInputName}
+                      required
+                    />
+                  </div>
 
-          <div>
-            <label>
-              <input
-                name="sale"
-                type="radio"
-                value="true"
-                checked={saleInputState === 'true'}
-                onChange={handleInputSale}
-                required
-              />
-              Sale
-            </label>
-            <label>
-              <input
-                name="sale"
-                type="radio"
-                value="false"
-                checked={saleInputState === 'false'}
-                onChange={handleInputSale}
-                required
-              />
-              Buy
-            </label>
+                  <div className="input-container">
+                    <label>Price (€)</label>
+                    <input
+                      type="number"
+                      className=""
+                      placeholder="price"
+                      value={price}
+                      onChange={handleInputPrice}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <div className="input-container">
+                      <label>Type advert: </label>
+                      <input
+                        name="sale"
+                        type="radio"
+                        value="true"
+                        checked={type === 'true'}
+                        onChange={handleInputSale}
+                        required
+                      />
+                      Sale
+                      <input
+                        name="sale"
+                        type="radio"
+                        value="false"
+                        checked={type === 'false'}
+                        onChange={handleInputSale}
+                        required
+                      />
+                      Buy
+                    </div>
+                  </div>
+
+                  <div className="input-container">
+                    <label>Tags: </label>
+                    <ul>
+                      {tags.map((tag, index) => (
+                        <li key={tag}>
+                          <input
+                            name="type"
+                            type="checkbox"
+                            onChange={(e) => handleCheckTag(e)}
+                            value={tag}
+                          />
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="colum">
+                  <div className="input-container">
+                    <label>Image: </label>
+                    <InputFile
+                      onChange={handleInputPhoto}
+                      imageNoPhoto={photoRender}
+                      validFormats={'image/*'}
+                      name={'image-upload'}
+                      {...props}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="footer">
+                <div>
+                  <Link to="/">
+                    <Button>Cancel</Button>
+                  </Link>
+                </div>
+                <div>
+                  <Button type="submit">Create Advert</Button>
+                </div>
+              </div>
+            </form>
+
+            {isLoading && <SpinnerLoading />}
+            {error && <Alert onClick={resetError}>{error.message}</Alert>}
           </div>
         </div>
-        <div>
-          <ul>
-            {tagsInputState.tags.map((tag) => {
-              return (
-                <CheckBoxInput key={tag.id} onChange={handleCheckChieldElement} {...tag} required />
-              );
-            })}
-          </ul>
-        </div>
-        <div>
-          <DragAndDropInputFile
-            onChange={handleInputPhoto}
-            imagePhoto={photoRenderState}
-            accept={'image/*'}
-            name={'image-upload'}
-            {...props}
-            required
-          />
-        </div>
-        <div>
-          <Button type="submit" value="Add Image">
-            Create Advert
-          </Button>
-        </div>
-      </form>
-      {isLoading && <SpinnerLoading />}
-      {error && (
-        <Alert onClick={resetError} className="loginPage-error">
-          {error.message}
-        </Alert>
-      )}
+      </div>
     </Layout>
   );
 }

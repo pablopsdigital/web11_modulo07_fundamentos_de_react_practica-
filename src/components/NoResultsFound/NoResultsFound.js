@@ -1,17 +1,17 @@
-import './NoResultsFound.css';
+import './NoResultsFound.scss';
 import { Link } from 'react-router-dom';
 import Button from '../Button/Button';
 
 function NoResultsFound({ ...props }) {
   return (
-    <div className="noresultsfound__container">
-      <div className="noresultsfound__container">
+    <div id="noresultsfound">
+      <div className="contect">
         <div className="emoji">😞</div>
         <h1>No announcement yet</h1>
         <p>Do you want to create the first one?</p>
       </div>
       <Link to="/adverts/new">
-        <Button className="login-button">Create advert</Button>
+        <Button>Create advert</Button>
       </Link>
     </div>
   );

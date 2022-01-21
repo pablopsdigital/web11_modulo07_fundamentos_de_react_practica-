@@ -1,18 +1,17 @@
-import './DragAndDropInputFile.css';
+import './InputFile.scss';
 function DragAndDropInputFile(props) {
   return (
     <div className="container-input-file">
       <h3 className="input-file-head">Add your Image</h3>
       <div className="img-holder">
-        <img src={props.imagePhoto.imagePhoto} alt="" id="img" className="img" />
+        <img src={props.imageNoPhoto.imageNoPhoto} alt="" id="img" className="img" />
       </div>
       <input
         onChange={props.onChange}
-        accept={props.accept}
+        formats={props.validFormats}
         name={props.name}
         id="input-file"
         type="file"
-        checked={props.isChecked}
         value={props.value}
       />
 

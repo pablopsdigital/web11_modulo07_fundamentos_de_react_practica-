@@ -1,23 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App/App';
-import reportWebVitals from './reportWebVitals';
-import StorageManager from './utils/StorageManager';
-import './index.css';
+import CustomLocalStorageManager from './utils/CustomLocalStorageManager';
+import './index.scss';
 import { setAuthorizationHeader } from './services/ApiClient';
 
 //Read data localStorage
-const rememberme = StorageManager.getItem('rememberme');
-
 let accessToken = null;
-if (rememberme) {
-  accessToken = StorageManager.getItem('token');
+if (CustomLocalStorageManager.getItem('token')) {
+  accessToken = CustomLocalStorageManager.getItem('token');
   //Config Header axios client
   setAuthorizationHeader(accessToken);
 }
-
-// const accessToken = StorageManager.getItem('token');
-// setAuthorizationHeader(accessToken);
 
 ReactDOM.render(
   <React.StrictMode>
@@ -26,5 +20,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-reportWebVitals();

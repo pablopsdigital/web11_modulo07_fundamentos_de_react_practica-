@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './AdvertisementCard.css';
+import './AdvertisementCard.scss';
 import PropTypes from 'prop-types';
 import Image from '../Image/Image';
 const { formatDistanceToNow } = require('date-fns');

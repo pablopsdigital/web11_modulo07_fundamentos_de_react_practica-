@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import Button from '../../components/Button/Button';
 import { login } from './LoginService';
-import './LoginPage.css';
+import './LoginPage.scss';
+import { ReactComponent as Brand } from '../../images/svg/brand.svg';
 import Alert from '../../components/Alert/Alert';
 import AuthContext from '../../contexts/AuthContext';
 import PropTypes from 'prop-types';
@@ -21,7 +22,7 @@ function LoginPage({ history, location, ...props }) {
   const [inputsValuesState, setInputsValue] = useState({
     email: '',
     password: '',
-    rememberme: null
+    rememberme: false
   });
 
   //State for error control
@@ -50,8 +51,8 @@ function LoginPage({ history, location, ...props }) {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    setIsLoading(true); //State loading
-    setError(); //State error null
+    setIsLoading(true);
+    setError();
 
     //Init request API
     try {
@@ -68,43 +69,48 @@ function LoginPage({ history, location, ...props }) {
   };
 
   return (
-    <div className="loginPage">
-      <h1>Login</h1>
-      <form onSubmit={handleFormSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter email"
-          value={inputsValuesState.email}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter password"
-          value={inputsValuesState.password}
-          onChange={handleChange}
-        />
-        <br />
-        <label>
+    <div id="loginPage">
+      <div className="brand-container">
+        <Brand className="brand-img" alt="brand" />
+      </div>
+      <div className="content">
+        <h1>Login</h1>
+        <form onSubmit={handleFormSubmit}>
           <input
-            type="checkbox"
-            name="rememberme"
-            checked={inputsValuesState.rememberme}
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={inputsValuesState.email}
             onChange={handleChange}
           />
-          Is going
-        </label>
-        <br />
-        <Button
-          type="submit"
-          //Render condicional disabled
-          disabled={isLoading || !inputsValuesState.email || !inputsValuesState.password}
-        >
-          Iniciar sesión
-        </Button>
-      </form>
+          <br />
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            value={inputsValuesState.password}
+            onChange={handleChange}
+          />
+          <br />
+          <label>
+            <input
+              type="checkbox"
+              name="rememberme"
+              checked={inputsValuesState.rememberme}
+              onChange={handleChange}
+            />{' '}
+            Remenber me
+          </label>
+          <br />
+          <Button
+            type="submit"
+            //Render condicional disabled
+            disabled={isLoading || !inputsValuesState.email || !inputsValuesState.password}
+          >
+            Iniciar sesión
+          </Button>
+        </form>
+      </div>
 
       {/*If loading*/}
       {isLoading && <SpinnerLoading />}

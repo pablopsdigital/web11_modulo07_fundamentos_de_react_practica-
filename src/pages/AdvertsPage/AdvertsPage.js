@@ -1,14 +1,13 @@
 import AdvertisementCard from '../../components/AdvertisementCard/AdvertisementCard';
 import Layout from '../../containers/Layout/Layout';
-import './AdvertsPage.css';
-import { useState, useLayoutEffect } from 'react';
+import './AdvertsPage.scss';
+import { useState, useEffect } from 'react';
 import { getAdvertisements } from './AdvertsService';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 import PropTypes from 'prop-types';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
-import Filters from '../../components/Filters/Filters';
-import { FiltersContextProvider } from '../../contexts/FiltersContext';
+import FiltersForm from '../../components/FiltersForm/FiltersForm';
 
 //Protypes
 AdvertsPage.propTypes = {
@@ -16,22 +15,9 @@ AdvertsPage.propTypes = {
 };
 
 function AdvertsPage({ ...props }) {
-  //Filters
-  //============================================================================
-  const [inputValueState, setInputsValue] = useState('search advert');
-
-  const handleChangeSearch = (event) => {
-    setInputsValue((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value
-    }));
-  };
-
-  //States
+  //Data
   //=======================================================================
-  const [advertisementsState, setAdvertisements] = useState([]);
-
-  //State loading
+  const [advertisements, setAdvertisements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -39,7 +25,7 @@ function AdvertsPage({ ...props }) {
     setError(null);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     resetError();
     getAdvertisements().then((advertisements) => setAdvertisements(advertisements));
     setIsLoading(false);
@@ -47,60 +33,28 @@ function AdvertsPage({ ...props }) {
 
   //Filters
   //======================================================================
-  const initialStateFilters = {
-    name: '',
-    sale: 'all',
-    price: 0,
-    tags: []
-  };
-
-  const [filtersState, setFilters] = useState(initialStateFilters);
-  const resetFilters = () => {
-    setFilters = null;
-  };
-
-  let advertisementsFilterList = advertisementsState;
-  const handleFilterResults = () => {};
 
   //Return
   //=======================================================================
   return (
-    <FiltersContextProvider value={{ filtersState, setFilters, resetFilters, handleFilterResults }}>
-      <Layout {...props}>
-        <section className="container">
-          <Filters />
-        </section>
-        <section className="container">
-          <h2 className="card-list-title">The latest publications</h2>
-          {isLoading || advertisementsState.length ? (
-            <ul className="card-list-auto-grid">
-              {advertisementsState
-                .filter((advertisement) => {
-                  if (filtersState.name) {
-                    return advertisement.name.includes(filtersState.name);
-                  }
-                  if (filtersState.sale === 'buy') {
-                    return advertisement.sale === 'buy';
-                  }
-
-                  if (filtersState.sale === 'sale') {
-                    return advertisement.sale === 'sale';
-                  }
-
-                  if (filtersState.sale === 'all') {
-                    return advertisement;
-                  }
-
-                  if (JSON.stringify(filtersState.tags) === JSON.stringify(advertisement.tags)) {
-                    return advertisement;
-                  }
-                })
-                .map((advertisement) => (
+    <Layout {...props}>
+      <FiltersForm />
+      <section id="adverts-page">
+        <div className="container">
+          {isLoading || advertisements.length ? (
+            <>
+              <div className="header">
+                <h2>The latest publications</h2>
+                <p>Total results: {advertisements.length}</p>
+              </div>
+              <ul className="body">
+                {advertisements.map((advertisement) => (
                   <AdvertisementCard key={advertisement.id} advertisement={advertisement} />
                 ))}
-            </ul>
+              </ul>
+            </>
           ) : (
-            <NoResultsFound />
+            !isLoading && <NoResultsFound />
           )}
           {isLoading && <SpinnerLoading />}
           {error && (
@@ -108,9 +62,9 @@ function AdvertsPage({ ...props }) {
               {error.message}
             </Alert>
           )}
-        </section>
-      </Layout>
-    </FiltersContextProvider>
+        </div>
+      </section>
+    </Layout>
   );
 }
 export default AdvertsPage;

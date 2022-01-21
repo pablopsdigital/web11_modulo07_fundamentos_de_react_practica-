@@ -1,47 +1,59 @@
-import './Navbar.css';
+import './Navbar.scss';
 import Button from '../Button/Button';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ReactComponent as Brand } from '../../images/svg/brand.svg';
 import { Link, NavLink } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
-import { useState } from 'react';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 
 function Navbar({ search, ...props }) {
-  //Import authContext properties
+  //Import AuthContext properties
   const { userIsLoggedState, handleLogout } = useContext(AuthContext);
 
+  //Modal control
+  const [modalConfirm, setConfirm] = useState(false);
+  const handleConfirm = () => {
+    setConfirm(modalConfirm ? false : true);
+  };
+
   return (
-    <nav className="navigation">
-      <div className="menu-icon"></div>
-      <ul className="navigation-list container">
-        <li className="brand-container">
-          <Link to="/">
-            <Brand className="brand-img" alt="brand"></Brand>
-          </Link>
-        </li>
-        <li>
-          <NavLink exact to="/adverts" activeClassName="link-active">
-            Adverts
-          </NavLink>
-        </li>
-        <li>
-          <NavLink exact to="/adverts/new" activeClassName="link-active">
-            New Advert
-          </NavLink>
-        </li>
-        <li className="navigation-buttons">
-          {userIsLoggedState ? (
-            <Link to="/login" onClick={handleLogout}>
-              <Button className="close-session-button">Log out</Button>
+    <>
+      <nav id="navbar" className="navigation">
+        <div className="menu-icon"></div>
+        <div className="navigation container">
+          <div className="brand-container">
+            <Link to="/">
+              <Brand className="brand-img" alt="brand"></Brand>
             </Link>
-          ) : (
-            <Link to="/login">
-              <Button className="login-button">Login</Button>
-            </Link>
-          )}
-        </li>
-      </ul>
-    </nav>
+          </div>
+          <div className="nav-options">
+            <NavLink exact to="/adverts" activeClassName="link-active">
+              Adverts
+            </NavLink>
+            <NavLink exact to="/adverts/new" activeClassName="link-active">
+              New Advert
+            </NavLink>
+            {userIsLoggedState ? (
+              <>
+                <Button onClick={handleConfirm}>Log out</Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button className="login-button">Login</Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {modalConfirm && (
+        <ConfirmDialog
+          title={'Sure you want to log out?'}
+          onConfirm={handleLogout}
+          onClose={handleConfirm}
+        />
+      )}
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
-import './Alert.css';
+import './Alert.scss';
 import PropTypes from 'prop-types';
-
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 //Protypes
 Alert.propTypes = {
   title: PropTypes.string,
@@ -18,7 +18,9 @@ function Alert({ ...props }) {
   return (
     <div onClick={props.onClick} className="alert">
       <p>{props.children}</p>
-      <div className="close">X</div>
+      <div className="close">
+        <AiOutlineCloseCircle className="icon" />
+      </div>
     </div>
   );
 }

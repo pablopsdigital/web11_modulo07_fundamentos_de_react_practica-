@@ -1,12 +1,17 @@
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import Button from '../../components/Button/Button';
 import Layout from '../../containers/Layout/Layout';
-import './NotFoundPage.css';
+import './NotFoundPage.scss';
 
 function NotFoundPage({ ...props }) {
   return (
     <Layout {...props}>
-      <section className="container">
+      <section id="not-fount-page" className="container">
         <h1>401</h1>
-        <h2>Pagina no encontrada</h2>
+        <h2>Page not found</h2>
+        <Link to="/">
+          <Button>Home</Button>
+        </Link>
       </section>
     </Layout>
   );
