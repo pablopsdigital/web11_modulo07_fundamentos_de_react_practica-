@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import Button from '../Button/Button';
 import './FiltersForm.scss';
 import { Range } from 'rc-slider';
@@ -6,106 +6,116 @@ import { getAllTags } from './FiltersService';
 import 'rc-slider/assets/index.css';
 import CustomLocalStorageManager from '../../utils/CustomLocalStorageManager';
 
-export default function Filters() {
+export default function Filters({ advertisements, setFiltersInfo }) {
+  //Calculate minPrice maxPrice price
+  const minPrice = advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price;
+  const maxPrice = advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price;
+
   //Filters config
-  const [filters, setFilters] = useState({
+  const filtersInitialState = {
     name: '',
     sale: 'all',
-    price: [0, 100],
+    price: [minPrice, maxPrice],
     tags: []
-  });
+  };
 
-  useEffect(() => {
-    if (CustomLocalStorageManager.getItem('filters')) {
-      const readFilters = CustomLocalStorageManager.getItem('filters');
-      setFilterName(readFilters.name);
-      setFilterSale(readFilters.sale);
-      setFilterPriceRange(readFilters.price);
-    }
-  }, []);
+  //Filters
+  const [filters, setFilters] = useState(filtersInitialState);
 
   //Name filter
-  const [filterName, setFilterName] = useState(filters.name);
+  const [filterName, setFilterName] = useState(filtersInitialState.name);
   const handleInputName = (event) => {
     setFilterName(event.target.value);
   };
 
   //Sale filter
-  const [filterSale, setFilterSale] = useState(filters.sale);
+  const [filterSale, setFilterSale] = useState(filtersInitialState.sale);
   const handleInputSale = (event) => {
     setFilterSale(event.target.value);
   };
 
-  //Price filter
-  const marksSlider = {
-    0: '0',
-    100: '100'
-  };
-
-  const [filterPriceRange, setFilterPriceRange] = useState(filters.price);
+  const [filterPriceRange, setFilterPriceRange] = useState(filtersInitialState.price);
   const handleFilterPriceRange = (value) => {
+    console.log('value', value);
     setFilterPriceRange(value);
   };
 
-  /*Tags*/
-  const [selectTags, setSelectTags] = useState(filters.tags);
+  //Tags filter
+  const [selectTags, setSelectTags] = useState(filtersInitialState.tags);
   const [tags, setTags] = useState([]);
+
   useEffect(() => {
     // resetError();
     getAllTags().then((tags) => setTags(tags));
+    saveFilters();
     // setIsLoading(false);
   }, []);
 
   const handleCheckTag = (event) => {
-    var listTags = [...selectTags];
+    var listSelectTags = [...selectTags];
     if (event.target.checked) {
-      listTags = [...selectTags, event.target.value];
+      listSelectTags = [...selectTags, event.target.value];
     } else {
-      listTags.splice(selectTags.indexOf(event.target.value), 1);
+      listSelectTags.splice(selectTags.indexOf(event.target.value), 1);
     }
-    setSelectTags(listTags);
-    console.log(listTags);
+    setSelectTags(listSelectTags);
   };
 
-  /*Send form*/
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
+  //Data filters select by user
+  const saveFilters = () => {
     const selectFiltersInfo = {
       name: filterName,
       sale: filterSale,
       price: filterPriceRange,
       tags: selectTags
     };
-    setFilters(selectFiltersInfo);
+
     CustomLocalStorageManager.setItem('filters', selectFiltersInfo);
+    setFiltersInfo(selectFiltersInfo);
+    setFilters(selectFiltersInfo);
   };
 
+  //Set data filters in state and localStorage
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    saveFilters();
+  };
+
+  //Reset filters state and localStorage
   const resetFilters = (event) => {
     event.preventDefault();
-    setFilters({
-      name: '',
-      sale: 'all',
-      price: [0, 100],
-      tags: []
-    });
 
-    setFilterName('');
-    setFilterSale('all');
-    setFilterPriceRange([0, 100]);
-    setSelectTags([]);
+    setFilters(filtersInitialState);
 
+    setFilterName(filtersInitialState.name);
+    setFilterSale(filtersInitialState.sale);
+    setFilterPriceRange(filtersInitialState.price);
+    setSelectTags(filtersInitialState.tags);
+
+    CustomLocalStorageManager.setItem('filters', filtersInitialState);
+    setFiltersInfo(filtersInitialState);
     CustomLocalStorageManager.removeItem('filters');
   };
+
+  useEffect(() => {
+    if (CustomLocalStorageManager.getItem('filters')) {
+      const readFilters = CustomLocalStorageManager.getItem('filters');
+
+      setFilters(readFilters);
+
+      setFilterName(readFilters.name);
+      setFilterSale(readFilters.sale);
+      setFilterPriceRange(readFilters.price);
+      setSelectTags(readFilters.tags);
+
+      setFiltersInfo(readFilters);
+    }
+  }, [setFiltersInfo]);
 
   return (
     <div id="filters">
       <h3>Filters</h3>
-      <p>FilterName: {filters.name}</p>
-      <p>filterSale: {filters.sale}</p>
-      <p>FilterPriceRange: {filters.price}</p>
-      <p>{JSON.stringify(filters.tags)}</p>
-
+      <p>{JSON.stringify(filters)}</p>
       <div className="container">
         <div className="filters-line">
           <form onSubmit={handleFormSubmit}>
@@ -157,11 +167,15 @@ export default function Filters() {
               </div>
 
               <div>
-                <label>Range: {`${filterPriceRange[0]} - ${filterPriceRange[1]}`}</label>
+                <label>Range: {filterPriceRange}</label>
                 <div className="slider-range">
                   <Range
-                    marks={marksSlider}
-                    allowCross={false}
+                    marks={{
+                      [minPrice]: minPrice,
+                      [maxPrice]: maxPrice
+                    }}
+                    min={minPrice}
+                    max={maxPrice}
                     value={filterPriceRange}
                     onChange={handleFilterPriceRange}
                   />

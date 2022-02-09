@@ -114,7 +114,7 @@ function AdvertPage({ match, ...props }) {
 
       {modalConfirm && (
         <ConfirmDialog
-          title={'Sure you want to log out?'}
+          title={'Are you want to delete this ad?'}
           onConfirm={handleDelete}
           onClose={handleConfirm}
         />
