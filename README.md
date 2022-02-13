@@ -2,6 +2,13 @@
 
 Práctica orientada a la creación de un frontend completo con React, sin la utilización de ninguna librería o framework adicional.
 
+# Vídeo funcionamiento
+
+  <a href="https://www.loom.com/share/bffb4799b49b44e98c807c7692ba701c">
+    <img style="max-width:100%;" src="https://cdn.loom.com/sessions/thumbnails/bffb4799b49b44e98c807c7692ba701c-with-play.gif">
+    <p>React Introducción - Ver Video</p>
+  </a>
+
 # Instalación servidor de pruebas
 
 La tarea está basada en el uso del servidor **nodepop-api**. Se pueden seguir las instrucciones de instalación desde el siguiente link: https://github.com/davidjj76/nodepop-api
@@ -26,7 +33,15 @@ http://localhost:3001/api/v1/adverts
 Se puede acceder a la documentación del api en la ruta:
 http://localhost:3001/swagger/#/
 
-## Capturas
+# Notas
+
+El slider implementado (rc-slider) de los filtros, lanza un warning al comenzar a modificar el rango de precios (`findDOMNode is deprecated in StrictMode`) este es un error definido a nivel interno del componente.
+
+Algunos enlaces al problema: https://github.com/react-component/slider/issues/750
+
+![enter image description here](documentation/images/warning.png)
+
+# Capturas
 
 ![enter image description here](documentation/screencaptures/captura_00.png)
 
