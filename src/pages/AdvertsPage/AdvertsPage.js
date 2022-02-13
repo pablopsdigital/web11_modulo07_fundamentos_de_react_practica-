@@ -42,7 +42,11 @@ function AdvertsPage({ ...props }) {
   return (
     <Layout {...props}>
       {/* <p>Filters Info: {JSON.stringify(filtersInfo)}</p> */}
-      <FiltersForm advertisements={advertisements} setFiltersInfo={setFiltersInfo} />
+      <FiltersForm
+        advertisements={advertisements}
+        setFiltersInfo={setFiltersInfo}
+        filtersInfo={filtersInfo}
+      />
       <section id="adverts-page">
         <div className="container">
           {isLoading || advertisements.length ? (

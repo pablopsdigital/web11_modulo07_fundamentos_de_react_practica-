@@ -1,15 +1,14 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../Button/Button';
 import './FiltersForm.scss';
 import { Range } from 'rc-slider';
 import { getAllTags } from './FiltersService';
 import 'rc-slider/assets/index.css';
-import CustomLocalStorageManager from '../../utils/CustomLocalStorageManager';
 
-export default function Filters({ advertisements, setFiltersInfo }) {
+export default function Filters({ advertisements, setFiltersInfo, filtersInfo }) {
   //Calculate minPrice maxPrice price
-  const minPrice = advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price;
-  const maxPrice = advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price;
+  const minPrice = advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price || 0;
+  const maxPrice = advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price || 100;
 
   //Filters config
   const filtersInitialState = {
@@ -19,7 +18,6 @@ export default function Filters({ advertisements, setFiltersInfo }) {
     tags: []
   };
 
-  //Filters
   const [filters, setFilters] = useState(filtersInitialState);
 
   //Name filter
@@ -36,7 +34,6 @@ export default function Filters({ advertisements, setFiltersInfo }) {
 
   const [filterPriceRange, setFilterPriceRange] = useState(filtersInitialState.price);
   const handleFilterPriceRange = (value) => {
-    console.log('value', value);
     setFilterPriceRange(value);
   };
 
@@ -45,10 +42,7 @@ export default function Filters({ advertisements, setFiltersInfo }) {
   const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    // resetError();
     getAllTags().then((tags) => setTags(tags));
-    saveFilters();
-    // setIsLoading(false);
   }, []);
 
   const handleCheckTag = (event) => {
@@ -69,10 +63,17 @@ export default function Filters({ advertisements, setFiltersInfo }) {
       price: filterPriceRange,
       tags: selectTags
     };
-
-    CustomLocalStorageManager.setItem('filters', selectFiltersInfo);
     setFiltersInfo(selectFiltersInfo);
     setFilters(selectFiltersInfo);
+  };
+
+  const resetInfoFilters = () => {
+    setFilters(filtersInitialState);
+    setFilterName(filtersInitialState.name);
+    setFilterSale(filtersInitialState.sale);
+    setFilterPriceRange(filtersInitialState.price);
+    setSelectTags(filtersInitialState.tags);
+    setFiltersInfo(filtersInitialState);
   };
 
   //Set data filters in state and localStorage
@@ -84,38 +85,32 @@ export default function Filters({ advertisements, setFiltersInfo }) {
   //Reset filters state and localStorage
   const resetFilters = (event) => {
     event.preventDefault();
-
-    setFilters(filtersInitialState);
-
-    setFilterName(filtersInitialState.name);
-    setFilterSale(filtersInitialState.sale);
-    setFilterPriceRange(filtersInitialState.price);
-    setSelectTags(filtersInitialState.tags);
-
-    CustomLocalStorageManager.setItem('filters', filtersInitialState);
-    setFiltersInfo(filtersInitialState);
-    CustomLocalStorageManager.removeItem('filters');
+    resetInfoFilters();
   };
 
   useEffect(() => {
-    if (CustomLocalStorageManager.getItem('filters')) {
-      const readFilters = CustomLocalStorageManager.getItem('filters');
+    setFilters({
+      name: '',
+      sale: 'all',
+      price: [minPrice, maxPrice],
+      tags: []
+    });
+  }, [minPrice, maxPrice]);
 
-      setFilters(readFilters);
-
-      setFilterName(readFilters.name);
-      setFilterSale(readFilters.sale);
-      setFilterPriceRange(readFilters.price);
-      setSelectTags(readFilters.tags);
-
-      setFiltersInfo(readFilters);
-    }
-  }, [setFiltersInfo]);
+  useEffect(() => {
+    setFiltersInfo(filters); //reset page
+    setFilterName(filters.name);
+    setFilterSale(filters.sale);
+    setFilterPriceRange(filters.price);
+    setSelectTags(filters.tags);
+  }, [filters, setFiltersInfo]);
 
   return (
     <div id="filters">
       <h3>Filters</h3>
-      <p>{JSON.stringify(filters)}</p>
+      {/* <p>Filters: {JSON.stringify(filters)}</p>
+      <p>filtersInfo: {JSON.stringify(filtersInfo)}</p>
+      <p>PriceRange: {JSON.stringify(filterPriceRange)}</p> */}
       <div className="container">
         <div className="filters-line">
           <form onSubmit={handleFormSubmit}>
@@ -167,7 +162,7 @@ export default function Filters({ advertisements, setFiltersInfo }) {
               </div>
 
               <div>
-                <label>Range: {filterPriceRange}</label>
+                <label>Range: {`${filterPriceRange[0]} - ${filterPriceRange[1]}`}</label>
                 <div className="slider-range">
                   <Range
                     marks={{
